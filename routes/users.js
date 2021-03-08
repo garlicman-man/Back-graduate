@@ -4,19 +4,22 @@ var express = require('express');
 var router = express.Router();
 var URL = require('url');
 
-router.get('/getUserInfo',function(req,res,next){
+router.get('/getStudent',function(req,res,next){
   var result = ''
   // http://localhost:8080/apis/users/getUserInfo?id=1
   var params = URL.parse(req.url, true).query;
-  console.log(params);
-  helper.sql('select * from E', function (err, result) {
+  // console.log(params);
+  console.log(params.xh)
+  // if(params.xh==18145001){
+  //   console.log('success')
+  // }
+  helper.sql('select * from E where xh='+params.xh, function (err, result) {
     if (err) {
       console.log(err);
     }
-    this.result = result
     console.log(result)
-    // res.send(result.recordset)
-    res.send(JSON.stringify(result))
+    this.result = result
+    res.send(result)
   });
 })
 
@@ -33,7 +36,8 @@ router.get('/add',function(req,res,next){
     }
   })
 })
-router.get('/add',function(req,res,next){
+
+router.get('/delete',function(req,res,next){
   var result = ''
   // http://localhost:8080/apis/users/getUserInfo?id=1
   var params = URL.parse(req.url, true).query;
@@ -45,7 +49,7 @@ router.get('/add',function(req,res,next){
     }
   })
 })
-router.get('/add',function(req,res,next){
+router.get('/update',function(req,res,next){
   var result = ''
   // http://localhost:8080/apis/users/getUserInfo?id=1
   var params = URL.parse(req.url, true).query;

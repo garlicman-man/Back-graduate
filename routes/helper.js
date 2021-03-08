@@ -42,7 +42,7 @@ const units = {
       user: 'sa',                       //SQL Server 的登录名
       password: '123456',               //SQL Server 的登录密码
       server: 'localhost',              //SQL Server 的地址
-      database: 'school',                 //数据库名称
+      database: 'graduation_design',                 //数据库名称
       port: 1433,                       //端口号，默认为1433
       pool: {
         min: 0,                         //连接池最小连接数，默认0
