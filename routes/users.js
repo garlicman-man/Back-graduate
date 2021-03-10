@@ -1,6 +1,5 @@
 const helper = require('./helper');
 var express = require('express');
-// var dbHelper = require('./dbHelper.js');
 var router = express.Router();
 var URL = require('url');
 
@@ -80,6 +79,22 @@ router.get('/getAllProjectsExceptSelected',function(req,res,next){
   });
 })
 
+router.get('/getMyOpenProject',function(req,res,next){
+  var result = ''
+  // http://localhost:8080/apis/users/getUserInfo?id=1
+  var params = URL.parse(req.url, true).query;
+  // console.log(params);
+  // console.log(params.xh)
+  helper.sql('select pid,pmc from O where gh='+ params.gh, function (err, result) {
+    if (err) {
+      console.log(err);
+    }
+    console.log(result)
+    this.result = result
+    res.send(result)
+  });
+})
+
 router.get('/getAllStudentsExceptSelected',function(req,res,next){
   var result = ''
   // http://localhost:8080/apis/users/getUserInfo?id=1
@@ -87,6 +102,19 @@ router.get('/getAllStudentsExceptSelected',function(req,res,next){
   // console.log(params);
   // console.log(params.xh)
   helper.sql('select A.pid,P.pmc,A.xh,S.xm from ((select * from E where E.gh='+params.gh+') except (select * from F where F.gh='+params.gh+'))as A join S on S.xh=A.xh join P on P.pid=A.pid', function (err, result) {
+    if (err) {
+      console.log(err);
+    }
+    console.log(result)
+    this.result = result
+    res.send(result)
+  });
+})
+router.get('/getAllProjects',function(req,res,next){
+  var result = ''
+  // http://localhost:8080/apis/users/getUserInfo?id=1
+  var params = URL.parse(req.url, true).query;
+  helper.sql('select * from P', function (err, result) {
     if (err) {
       console.log(err);
     }
@@ -113,6 +141,29 @@ router.get('/chooseProject',function(req,res,next){
       console.log("error:" + err);
     } else {
       console.log("Ok!");
+    }
+  });
+})
+
+router.get('/OpenProject',function(req,res,next){
+  var result = ''
+  // http://localhost:8080/apis/users/add?pid=001&pmc=个人事务管理系统&gh=8765001&xm=吴琪
+  var params = URL.parse(req.url, true).query;
+  console.log("OpenProject")
+  console.log(params.pid);
+  console.log(params.pmc);
+  console.log(params.gh);
+  console.log(params.xm);
+  var insertstring = "'"+params.pid+"','"+params.pmc+"','"+params.gh+"','"+params.xm+"'"
+
+  // insert into O values('001','个人事务管理系统','8765001','吴琪')
+  console.log(insertstring)
+  helper.sql("insert into O values("+insertstring+")", err => {
+    // insert into E values('001','个人事务管理系统','8765001','吴琪',  '18145001')
+    if (err) {
+      console.log("error:" + err);
+    } else {
+      console.log("Ok Open project!");
     }
   });
 })
@@ -147,6 +198,21 @@ router.get('/deletechosenproject',function(req,res,next){
       console.log("error:" + err);
     } else {
       console.log("Ok!");
+    }
+  })
+})
+
+router.get('/deleteMyProject',function(req,res,next){
+  var result = ''
+  var params = URL.parse(req.url, true).query;
+  console.log("deleteMyProject")
+  console.log(params.pid);
+  console.log(params.gh);
+  helper.sql("delete O where "+params.pid+" = pid and "+params.gh+"= gh", err => {
+    if (err) {
+      console.log("error:" + err);
+    } else {
+      console.log("Ok delete!");
     }
   })
 })
