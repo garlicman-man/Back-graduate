@@ -53,7 +53,7 @@ router.get('/check',function(req,res,next){
   }
 })
 
-router.get('/getStudentChosen',function(req,res,next){
+router.get('/studentGetChosenProject',function(req,res,next){
   var result = ''
   var params = URL.parse(req.url, true).query;
   console.log(params.xh)
@@ -74,7 +74,7 @@ router.get('/getStudentChosen',function(req,res,next){
   }
 })
 
-router.get('/getTeacherChosen',function(req,res,next){
+router.get('/teacherGetChosenStudents',function(req,res,next){
   var result = ''
   var params = URL.parse(req.url, true).query;
   console.log(params.xh)
@@ -136,57 +136,74 @@ router.get('/teacherGetMyOpenProject',function(req,res,next){
   }
 })
 
-router.get('/getAllStudentsExceptSelected',function(req,res,next){
+router.get('/teacherGetAllStudentsExceptSelected',function(req,res,next){
   var result = ''
   // http://localhost:8080/apis/users/getUserInfo?id=1
   var params = URL.parse(req.url, true).query;
-  // console.log(params);
-  // console.log(params.xh)
-  helper.sql('select A.pid,P.pmc,A.xh,S.xm from ((select * from E where E.gh='+params.gh+') except (select * from F where F.gh='+params.gh+'))as A join S on S.xh=A.xh join P on P.pid=A.pid', function (err, result) {
-    if (err) {
-      console.log(err);
+  try{
+    var sqlstr = "select A.pid,P.pmc,A.xh,S.xm from ((select * from E where E.gh="+params.gh+") except (select * from F where F.gh="+params.gh+"))as A join S on S.xh=A.xh join P on P.pid=A.pid";
+    var result = ""
+    result= myJDBCtool(sqlstr)
+    if(result.error != -1){
+      res.send(result)
     }
-    console.log(result)
-    this.result = result
-    res.send(result)
-  });
+    else{
+      console.log("error1")
+      res.send("error1")
+    }
+  }catch(err){
+    console.log('error2',err );
+    res.send("error2")
+  }
 })
+
 router.get('/getAllProjects',function(req,res,next){
   var result = ''
-  // http://localhost:8080/apis/users/getUserInfo?id=1
   var params = URL.parse(req.url, true).query;
-  helper.sql('select * from P', function (err, result) {
-    if (err) {
-      console.log(err);
+  try{
+    var sqlstr = "select * from P";
+    var result = ""
+    result= myJDBCtool(sqlstr)
+    if(result.error != -1){
+      res.send(result)
     }
-    console.log(result)
-    this.result = result
-    res.send(result)
-  });
+    else{
+      console.log("error1")
+      res.send("error1")
+    }
+  }catch(err){
+    console.log('error2',err );
+    res.send("error2")
+  }
 })
+
 // insert into E values('005','8765001','18145012')
-router.get('/chooseProject',function(req,res,next){
+router.get('/studentChooseProject',function(req,res,next){
   var result = ''
-  // http://localhost:8080/apis/users/add?pid=001&pmc=个人事务管理系统&gh=8765001&xm=吴琪
   var params = URL.parse(req.url, true).query;
   console.log(params.pid);
   console.log(params.gh);
   console.log(params.xh);
-  var insertstring = "'"+params.pid+"','"+params.gh+"','"+params.xh+"'"
 
-  // insert into O values('001','个人事务管理系统','8765001','吴琪')
-  console.log(insertstring)
-  helper.sql("insert into E values("+insertstring+")", err => {
-    // insert into E values('001','个人事务管理系统','8765001','吴琪',  '18145001')
-    if (err) {
-      console.log("error:" + err);
-    } else {
-      console.log("Ok!");
+  try{
+    var insertstring = "'"+params.pid+"','"+params.gh+"','"+params.xh+"'"
+    var sqlstr = "insert into E values("+insertstring+")"
+    var result = ""
+    result= myJDBCtool(sqlstr)
+    if(result.error != -1){
+      res.send(result)
     }
-  });
+    else{
+      console.log("error1")
+      res.send("error1")
+    }
+  }catch(err){
+    console.log('error2',err );
+    res.send("error2")
+  }
 })
 
-router.get('/OpenProject',function(req,res,next){
+router.get('/teacherOpenProject',function(req,res,next){
   var result = ''
   // http://localhost:8080/apis/users/add?pid=001&pmc=个人事务管理系统&gh=8765001&xm=吴琪
   var params = URL.parse(req.url, true).query;
@@ -195,99 +212,130 @@ router.get('/OpenProject',function(req,res,next){
   console.log(params.pmc);
   console.log(params.gh);
   console.log(params.xm);
-  var insertstring = "'"+params.pid+"','"+params.pmc+"','"+params.gh+"','"+params.xm+"'"
-
-  // insert into O values('001','个人事务管理系统','8765001','吴琪')
-  console.log(insertstring)
-  helper.sql("insert into O values("+insertstring+")", err => {
-    // insert into E values('001','个人事务管理系统','8765001','吴琪',  '18145001')
-    if (err) {
-      console.log("error:" + err);
-    } else {
-      console.log("Ok Open project!");
+  // var insertstring = "'"+params.pid+"','"+params.pmc+"','"+params.gh+"','"+params.xm+"'"
+  try{
+    var insertstring = "'"+params.pid+"','"+params.pmc+"','"+params.gh+"','"+params.xm+"'"
+    var sqlstr = "insert into O values("+insertstring+")"
+    var result = ""
+    result= myJDBCtool(sqlstr)
+    if(result.error != -1){
+      res.send(result)
     }
-  });
+    else{
+      console.log("error1")
+      res.send("error1")
+    }
+  }catch(err){
+    console.log('error2',err );
+    res.send("error2")
+  }
 })
 
-router.get('/chooseStudent',function(req,res,next){
+router.get('/teacherChooseStudent',function(req,res,next){
   var result = ''
-  // http://localhost:8080/apis/users/add?pid=001&pmc=个人事务管理系统&gh=8765001&xm=吴琪
   var params = URL.parse(req.url, true).query;
   console.log(params.pid);
   console.log(params.gh);
   console.log(params.xh);
-  var insertstring = "'"+params.pid+"','"+params.gh+"','"+params.xh+"'"
-
-  console.log(insertstring)
-  helper.sql("insert into F values("+insertstring+")", err => {
-    if (err) {
-      console.log("error:" + err);
-    } else {
-      console.log("Ok!");
+  try{
+    var insertstring = "'"+params.pid+"','"+params.gh+"','"+params.xh+"'"
+    var sqlstr = "insert into F values("+insertstring+")"
+    var result = ""
+    result= myJDBCtool(sqlstr)
+    if(result.error != -1){
+      res.send(result)
     }
-  });
+    else{
+      console.log("error1")
+      res.send("error1")
+    }
+  }catch(err){
+    console.log('error2',err );
+    res.send("error2")
+  }
 })
 
-router.get('/deletechosenproject',function(req,res,next){
+router.get('/studentDeleteChosenProject',function(req,res,next){
   var result = ''
   var params = URL.parse(req.url, true).query;
   console.log(params.pid);
   console.log(params.xh);
   console.log(params.gh);
-  helper.sql("delete E where "+params.xh+"= xh and "+params.pid+" = pid and "+params.gh+"= gh", err => {
-    if (err) {
-      console.log("error:" + err);
-    } else {
-      console.log("Ok!");
+  try{
+    var sqlstr = "delete E where "+params.xh+"= xh and "+params.pid+" = pid and "+params.gh+"= gh";
+    var result = ""
+    result= myJDBCtool(sqlstr)
+    if(result.error != -1){
+      res.send(result)
     }
-  })
+    else{
+      console.log("error1")
+      res.send("error1")
+    }
+  }catch(err){
+    console.log('error2',err );
+    res.send("error2")
+  }
 })
 
-router.get('/deleteMyProject',function(req,res,next){
+router.get('/teacherDeleteMyProject',function(req,res,next){
   var result = ''
   var params = URL.parse(req.url, true).query;
   console.log("deleteMyProject")
   console.log(params.pid);
   console.log(params.gh);
-  helper.sql("delete O where "+params.pid+" = pid and "+params.gh+"= gh", err => {
-    if (err) {
-      console.log("error:" + err);
-    } else {
-      console.log("Ok delete!");
+  try{
+    var sqlstr = "delete O where "+params.pid+" = pid and "+params.gh+"= gh";
+    var result = ""
+    result= myJDBCtool(sqlstr)
+    if(result.error != -1){
+      res.send(result)
     }
-  })
+    else{
+      console.log("error1")
+      res.send("error1")
+    }
+  }catch(err){
+    console.log('error2',err );
+    res.send("error2")
+  }
 })
 
-router.get('/deletechosenstudent',function(req,res,next){
+router.get('/teacherDeleteChosenStudent',function(req,res,next){
   var result = ''
   var params = URL.parse(req.url, true).query;
   console.log(params.pid);
   console.log(params.xh);
   console.log(params.gh);
-  helper.sql("delete F where "+params.xh+"= xh and "+params.pid+" = pid and "+params.gh+" = gh", err => {
-    if (err) {
-      console.log("error:" + err);
-    } else {
-      console.log("Ok!");
+  try{
+    var sqlstr = "delete F where "+params.xh+"= xh and "+params.pid+" = pid and "+params.gh+" = gh";
+    var result = ""
+    result= myJDBCtool(sqlstr)
+    if(result.error != -1){
+      res.send(result)
     }
-  })
+    else{
+      console.log("error1")
+      res.send("error1")
+    }
+  }catch(err){
+    console.log('error2',err );
+    res.send("error2")
+  }
 })
 
-
-
-
-router.get('/update',function(req,res,next){
-  var result = ''
-  // http://localhost:8080/apis/users/getUserInfo?id=1
-  var params = URL.parse(req.url, true).query;
-  helper.sql("update dbo.E set name = @updateObj where id = @whereObj", err => {
-    if (err) {
-      console.log("error:" + err);
-      return;
-    } else {
-      console.log('Ok!');
-    }
-  });
-})
+// router.get('/update',function(req,res,next){
+//   var result = ''
+//   // http://localhost:8080/apis/users/getUserInfo?id=1
+//   var params = URL.parse(req.url, true).query;
+//   helper.sql("update dbo.E set name = @updateObj where id = @whereObj", err => {
+//     if (err) {
+//       console.log("error:" + err);
+//       return;
+//     } else {
+//       console.log('Ok!');
+//     }
+//   });
+// })
 
 module.exports = router;
