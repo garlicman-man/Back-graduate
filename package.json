@@ -11,8 +11,13 @@
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
+    "jdbc": "^0.7.5",
     "morgan": "~1.9.1",
     "mssql": "^6.3.1",
+    "mysql": "^2.18.1",
+    "node-gyp": "^8.0.0",
+    "node-java": "^1.0.1",
+    "node-java-maven": "^0.1.2",
     "node-mssql": "0.0.1"
   }
 }

@@ -1,0 +1,15 @@
+{
+  "java": {
+  "dependencies": [
+    {
+      "groupId": "org.apache.lucene",
+      "artifactId": "lucene-core",
+      "version": "4.9.0"
+    }
+  ]
+  },
+  "dependencies": {
+    "pg": "^8.6.0",
+    "pg-pool": "^3.3.0"
+  }
+}
